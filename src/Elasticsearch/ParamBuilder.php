@@ -1,4 +1,6 @@
-<?php namespace App\Efemer\Factory\Elasticsearch;
+<?php
+
+namespace Efemer\Elasticsearch;
 
 class ParamBuilder implements \ArrayAccess {
 

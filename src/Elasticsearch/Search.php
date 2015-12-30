@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Efemer\Factory\Elasticsearch;
+namespace Efemer\Elasticsearch;
 
 use Elasticsearch\ClientBuilder;
 

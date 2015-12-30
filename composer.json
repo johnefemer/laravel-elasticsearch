@@ -1,0 +1,22 @@
+{
+    "name": "johnefemer/laravel-elasticsearch",
+    "description": "laravel elasticsearch helper",
+    "type": "package",
+    "keywords": ["scraper"],
+    "homepage": "https://github.com/johnefemer/laravel-elasticsearch",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.0",        
+        "elasticsearch/elasticsearch": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "John Efemer",
+            "email": "efemer@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Efemer\\Elasticsearch\\": "Elasticsearch" }
+    },    
+    "minimum-stability": "dev"
+}

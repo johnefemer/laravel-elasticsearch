@@ -1,6 +1,6 @@
 <?php
 
-namespace Efemer\Elasticsearch;
+namespace Efemer\Search;
 
 class Index extends Search {
 

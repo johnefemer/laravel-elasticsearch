@@ -1,6 +1,6 @@
 <?php
 
-namespace Efemer\Search;
+namespace Efemer\Search\Core;
 
 class ParamBuilder implements \ArrayAccess {
 
@@ -8,7 +8,7 @@ class ParamBuilder implements \ArrayAccess {
     protected $stash = [];
     public $payload = [];
 
-    public function __construct(Index $index, $params = []){
+    public function __construct(IndexManager $index, $params = []){
         if (!empty($params)) $this->stash = $params;
         $this->index = $index;
         $this->prepRequestPayload();

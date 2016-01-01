@@ -1,8 +1,8 @@
 <?php
 
-namespace Efemer\Search;
+namespace Efemer\Search\Core;
 
-class Index extends Search {
+class IndexManager extends Elasticsearch {
 
     public $params;
     public $name;

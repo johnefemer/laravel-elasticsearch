@@ -2,11 +2,12 @@
     "name": "johnefemer/laravel-elasticsearch",
     "description": "laravel elasticsearch helper",
     "type": "package",
-    "keywords": ["efemer", "elasticsearch"],
+    "keywords": ["elasticsearch", "laravel", "lumen", "efemer"],
     "homepage": "https://github.com/johnefemer/laravel-elasticsearch",
     "license": "MIT",
     "require": {
-        "php": ">=5.5.0",        
+        "php": ">=5.5.0",
+        "illuminate/support": "~4|~5",
         "elasticsearch/elasticsearch": "^2.1"
     },
     "authors": [
@@ -17,8 +18,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Efemer\\Search\\": "src/Search/",
-            "Efemer\\Search\\Factory": "src/Factory/"
+            "Efemer\\Search\\": "src/"
         }
     }
 }

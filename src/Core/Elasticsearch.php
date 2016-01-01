@@ -1,16 +1,16 @@
 <?php
 
-namespace Efemer\Search;
+namespace Efemer\Search\Core;
 
 use Elasticsearch\ClientBuilder;
 
-class Search {
+class Elasticsearch {
 
     public $clientConnection = null;
     public $silent = false;      // will not throw error but will log them
 
     protected function hosts(){
-        $hosts = config('hepburn.hosts.elasticsearch');
+        $hosts = config('search.hosts');
         return $hosts;
     }
 

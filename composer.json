@@ -7,7 +7,7 @@
     "license": "MIT",
     "require": {
         "php": ">=5.5.0",
-        "illuminate/support": "~4|~5",
+        "illuminate/support": "~5",
         "elasticsearch/elasticsearch": "^2.1"
     },
     "authors": [
@@ -20,5 +20,6 @@
         "psr-4": {
             "Efemer\\Search\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev-master"
 }

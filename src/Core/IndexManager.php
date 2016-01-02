@@ -8,11 +8,15 @@ class IndexManager extends Elasticsearch {
     public $name;
 
     public function __construct($indexName, $params = []){
+        parent::__construct();
         $this->name = $indexName;
         $this->params = new ParamBuilder($this, []);
     }
 
-    function indices(){ return $this->client()->indices(); }
+    // pass calls to indices api
+    public function __call($method, $args){
+        return $this->indices()->$method($args[0]);
+    }
 
     function type($config, $options = []){
         $flush = array_get($options, 'flush', true);
@@ -38,6 +42,43 @@ class IndexManager extends Elasticsearch {
 
     }
 
+    function getMappings($key = null){
+        //$return = "{$this->name}.settings.index";
+        //if (!is_null($key)) $return .= $return . '.' . $key;
+        return $result = $this->indices()->getMapping($this->params->payload);
+        //return array_get($result, $return);
+    }
+
+    function open(){
+        $res = $this->indices()->open(['index' => $this->name]);
+        return array_get($res, 'acknowledged') == 1 ? true : false;
+    }
+
+    function close(){
+        $res = $this->indices()->close(['index' => $this->name]);
+        return array_get($res, 'acknowledged') == 1 ? true : false;
+    }
+
+    // close index before updating analyzer
+    function analyzer($analyzerConfig){
+        return $this->settings('analysis', [ 'analyzer' => $analyzerConfig ] );
+    }
+
+    function refreshInterval($interval = '5s'){
+        return $this->setSetting('refresh_interval', $interval);
+    }
+
+    function numberOfShards($number = 1){
+        return $this->setSetting('number_of_shards', $number);
+    }
+
+    function numberOfReplicas($number = 0){
+        return $this->setSetting('number_of_replicas', $number);
+    }
+
+    function setSetting($key, $value){
+        return $this->settings([$key => $value], ['flush' => false]);
+    }
 
     function settings($params = null, $options = []){
         $flush = array_get($options, 'flush', true);
@@ -48,7 +89,6 @@ class IndexManager extends Elasticsearch {
         if (!$flush) return $this;
 
         $body = $this->params->body($PARAM_KEY, [], ['flat' => false]);
-
         if (!empty($body)) {
             try {
                 if ($this->exists()) {
@@ -68,16 +108,25 @@ class IndexManager extends Elasticsearch {
         return array_get($result, $return);
     }
 
+    function getSettings($key = null){
+        $return = "{$this->name}.settings.index";
+        if (!is_null($key)) $return .= $return . '.' . $key;
+        $result = $this->indices()->getSettings($this->params->payload);
+        return array_get($result, $return);
+    }
+
     function create($indexName = null, $params = []){
         if (!is_null($indexName)) $this->name = $indexName;
 
-        $body = $this->params->body(null, $params, ['flat' => false]);
+        if (!$this->exists()) {
+            $body = $this->params->body(null, $params, ['flat' => false]);
+            $res = $this->indices()->create($body);
+            if (array_get($res, 'acknowledged') == 1) app('log')->info('Index ' . $this->name . ' created.');
+            $this->params->flush();
+        } else {
+            app('log')->info('Index ' . $this->name . ' already exists.');
+        }
 
-        $res = $this->indices()->create($body);
-        if (array_get($res, 'acknowledged') == 1) log_info('Index ' . $this->name . ' created.');
-        $this->params->flush();
-
-        $result = $this->indices()->getSettings($this->params->payload);
         $return = "{$this->name}.settings.index";
         $result = $this->indices()->getSettings($this->params->payload);
         return array_get($result, $return);

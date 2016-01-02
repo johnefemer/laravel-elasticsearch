@@ -53,7 +53,10 @@ class ParamBuilder implements \ArrayAccess {
             if (!isset($pointer[$key])) $pointer[$key] = [];
             $pointer = &$pointer[$key];
         }
-        if (!empty($set)) $pointer = $set;
+        if (!empty($set)) {
+            if (is_array($set)) $pointer = array_merge($pointer, $set);
+            else $pointer = $set;
+        }
         return $pointer;
     }
 

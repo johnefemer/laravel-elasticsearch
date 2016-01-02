@@ -9,12 +9,18 @@ class Elasticsearch {
     public $clientConnection = null;
     public $silent = false;      // will not throw error but will log them
 
-    protected function hosts(){
-        $hosts = config('search.hosts');
+    public function __construct(){
+        $this->debug = $this->config('search.silent', false);
+    }
+
+
+
+    public function hosts(){
+        $hosts = $this->config('search.hosts', ['127.0.0.1:9200']);
         return $hosts;
     }
 
-    function client(){
+    public function client(){
         if (empty($this->clientConnection)) {
             $this->clientConnection = ClientBuilder::create()
                                         ->setHosts($this->hosts())
@@ -23,21 +29,40 @@ class Elasticsearch {
         return $this->clientConnection;
     }
 
-    function health(){
-        $result = $this->client()->cluster()->health();
-        pr($result);
+    // cluster calls
+    public function cluster(){ return $this->client()->cluster(); }
+
+    public function health(){
+        $result = $this->cluster()->health();
+        return $this->result($result);
+    }
+
+
+    // global indices calls
+    public function indices(){ return $this->client()->indices(); }
+
+    // index specific calls
+    public function index($indexName = null){
+        if (is_null($indexName)) $indexName = config('search.defaults.index');
+        return new IndexManager($indexName);
+    }
+
+
+
+    function result($result, $context = null){
+        return $result;
     }
 
     function error($exception){
         if ($exception instanceof \Exception) {
-            log_error($exception->getMessage());
+            app('log')->error($exception->getMessage());
             if (!$this->silent) throw $exception;
+        } else {
+            app('log')->error((string)$exception);
         }
-        log_error((string)$exception);
     }
 
-    function logAck($res){
+    public function config($key, $default = null){ return config($key, $default); }
 
-    }
 
-}
+} // end Elasticsearch

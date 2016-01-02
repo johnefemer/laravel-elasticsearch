@@ -18,7 +18,7 @@ class SearchServiceProvider extends ServiceProvider
         //require_once __DIR__.'/../Mondo/helpers.php';
         //$this->app->configure('search');
 
-        $configPath = __DIR__ . '../../config/search.php';
+        $configPath = __DIR__ . '/../../config/search.php';
         $this->mergeConfigFrom($configPath, 'search');
 
         $this->app->bind('search-index', function(){
